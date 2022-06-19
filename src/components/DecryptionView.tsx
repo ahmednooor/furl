@@ -1,5 +1,11 @@
 import { useState } from "react";
 import { useDecryption } from "../hooks/useDecryption";
+import ContentLayout from "./ContentLayout";
+import ContentTextArea from "./ContentTextArea";
+import HeaderLayout from "./HeaderLayout";
+import MainLayout from "./MainLayout";
+import PageTitle from "./PageTitle";
+import PasswordInput from "./PasswordInput";
 
 function DecryptionView({ hashValue }: { hashValue: string }) {
   const [password, setPassword] = useState("");
@@ -7,104 +13,55 @@ function DecryptionView({ hashValue }: { hashValue: string }) {
   const decText = useDecryption(hashValue, password);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh",
-      }}
-    >
-      <div
-        style={{
-          padding: "16px",
-        }}
-      >
-        <p
+    <MainLayout>
+      <HeaderLayout>
+        <PageTitle titleText="Decryption" />
+        <PasswordInput
+          password={password}
+          setPassword={setPassword}
+          shouldShowPassword={shouldShowPassword}
+        />
+        <a
           style={{
+            marginRight: "12px",
             fontSize: "1em",
+            color: "var(--fg-accent-color)",
+          }}
+          href="#/"
+          onClick={(event) => {
+            event.preventDefault();
+            setShouldShowPassword((shouldShowPassword) => !shouldShowPassword);
           }}
         >
-          <span
-            style={{
-              marginRight: "12px",
-              fontSize: "1em",
-            }}
-          >
-            Enter your password
-          </span>
-          <a
-            style={{
-              marginRight: "12px",
-              fontSize: "1em",
-            }}
-            href="#/"
-            onClick={(event) => {
-              event.preventDefault();
-              setShouldShowPassword(
-                (shouldShowPassword) => !shouldShowPassword
-              );
-            }}
-          >
-            <em>{shouldShowPassword ? "Hide Password" : "Show Password"}</em>
-          </a>
-          <a
-            style={{
-              marginRight: "12px",
-              fontSize: "1em",
-            }}
-            href={window.location.origin}
-            rel="noreferrer"
-            target="_blank"
-          >
-            <em>Create New</em>
-          </a>
-        </p>
-        <div
+          <em>{shouldShowPassword ? "Hide Password" : "Show Password"}</em>
+        </a>
+        <a
           style={{
-            display: "flex",
+            marginRight: "12px",
+            fontSize: "1em",
+            color: "var(--fg-accent-color)",
           }}
+          href={`${window.location.origin}${window.location.pathname}`}
+          rel="noreferrer"
+          // target="_blank"
         >
-          <input
-            style={{
-              marginTop: "8px",
-              fontSize: "1em",
-              display: "block",
-              width: "100%",
-              padding: "4px 8px",
-            }}
-            autoFocus={true}
-            type={shouldShowPassword ? "text" : "password"}
-            value={password}
-            onChange={(event) => setPassword(event?.currentTarget.value)}
+          <em>Create New</em>
+        </a>
+      </HeaderLayout>
+      <ContentLayout>
+        {password === "" ? (
+          <em style={{ opacity: 0.5 }}>Please type a password</em>
+        ) : password !== "" && decText === "" ? (
+          <em style={{ opacity: 0.5 }}>Probably incorrect password</em>
+        ) : (
+          <ContentTextArea
+            text={decText}
+            setText={(_) => {}}
+            isReadOnly={true}
           />
-        </div>
-      </div>
-      <div
-        style={{
-          padding: "0px 16px",
-        }}
-      >
-        <hr />
-      </div>
-      <div
-        style={{
-          padding: "16px",
-          maxWidth: "100%",
-          overflow: "auto",
-          flexGrow: "1",
-        }}
-      >
-        {password === "" && (
-          <em style={{ opacity: 0.75 }}>Please type a password</em>
         )}
-        {password !== "" && decText === "" && (
-          <em style={{ opacity: 0.75 }}>Probably incorrect password</em>
-        )}
-        <pre>
-          <p>{decText}</p>
-        </pre>
-      </div>
-    </div>
+      </ContentLayout>
+    </MainLayout>
   );
 }
 

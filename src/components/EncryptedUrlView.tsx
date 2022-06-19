@@ -1,4 +1,8 @@
 import { useState } from "react";
+import ContentLayout from "./ContentLayout";
+import HeaderLayout from "./HeaderLayout";
+import MainLayout from "./MainLayout";
+import PageTitle from "./PageTitle";
 
 function EncryptedUrlView({
   encText,
@@ -9,39 +13,19 @@ function EncryptedUrlView({
   setShouldShowEncrpytedUrl: React.Dispatch<React.SetStateAction<boolean>>;
   error?: string;
 }) {
-  const encUrl = `${window.location.origin}/#${encText}`;
+  const encUrl = `${window.location.origin}${window.location.pathname}#${encText}`;
   const [shouldShowCopiedText, setShouldShowCopiedText] = useState(false);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh",
-      }}
-    >
-      <div
-        style={{
-          padding: "16px",
-        }}
-      >
-        <p
-          style={{
-            fontSize: "1em",
-          }}
-        >
-          <span
-            style={{
-              marginRight: "12px",
-              fontSize: "1em",
-            }}
-          >
-            Encrypted Link
-          </span>
+    <MainLayout>
+      <HeaderLayout>
+        <PageTitle titleText="Encrypted Link" />
+        {!error && (
           <a
             style={{
               marginRight: "12px",
               fontSize: "1em",
+              color: "var(--fg-accent-color)",
             }}
             href="#/"
             onClick={(event) => {
@@ -52,57 +36,51 @@ function EncryptedUrlView({
           >
             <em>Copy</em>
           </a>
-          {!!shouldShowCopiedText && (
-            <em
-              style={{
-                marginRight: "12px",
-                fontSize: "1em",
-                opacity: 0.75,
-              }}
-              onClick={() => setShouldShowCopiedText(false)}
-            >
-              Copied!
-            </em>
-          )}
-          <a
+        )}
+        {!!shouldShowCopiedText && (
+          <em
             style={{
               marginRight: "12px",
               fontSize: "1em",
+              opacity: 0.5,
+              color: "var(--fg-color)",
             }}
-            href="#/"
-            onClick={(event) => {
-              event.preventDefault();
-              setShouldShowEncrpytedUrl(false);
-            }}
+            onClick={() => setShouldShowCopiedText(false)}
           >
-            <em>Go Back</em>
-          </a>
-        </p>
-      </div>
-      <div
-        style={{
-          padding: "0px 16px",
-        }}
-      >
-        <hr />
-      </div>
-      <div
-        style={{
-          padding: "16px",
-          maxWidth: "100%",
-          overflow: "auto",
-          flexGrow: "1",
-        }}
-      >
+            Copied!
+          </em>
+        )}
+        <a
+          style={{
+            marginRight: "12px",
+            fontSize: "1em",
+            color: "var(--fg-accent-color)",
+          }}
+          href="#/"
+          onClick={(event) => {
+            event.preventDefault();
+            setShouldShowEncrpytedUrl(false);
+          }}
+        >
+          <em>Go Back</em>
+        </a>
+      </HeaderLayout>
+      <ContentLayout>
         {!!error ? (
-          <em style={{ opacity: 0.75 }}>{error}</em>
+          <em style={{ opacity: 0.5 }}>{error}</em>
         ) : (
           <a
             style={{
-              marginRight: "12px",
-              fontSize: "1em",
+              display: "block",
+              backgroundColor: "var(--bg-color)",
+              border: "1px solid var(--bg-color)",
+              borderRadius: "4px",
+              padding: "8px 12px",
+              height: "100%",
+              overflow: "auto",
               whiteSpace: "pre-wrap",
               overflowWrap: "anywhere",
+              color: "var(--fg-accent-color)",
             }}
             href={encUrl}
             rel="noreferrer"
@@ -111,8 +89,8 @@ function EncryptedUrlView({
             <code>{encUrl}</code>
           </a>
         )}
-      </div>
-    </div>
+      </ContentLayout>
+    </MainLayout>
   );
 }
 

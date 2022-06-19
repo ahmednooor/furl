@@ -1,6 +1,12 @@
 import { useState } from "react";
 import { useEncryption } from "../hooks/useEncryption";
+import ContentLayout from "./ContentLayout";
+import ContentTextArea from "./ContentTextArea";
 import EncryptedUrlView from "./EncryptedUrlView";
+import HeaderLayout from "./HeaderLayout";
+import MainLayout from "./MainLayout";
+import PageTitle from "./PageTitle";
+import PasswordInput from "./PasswordInput";
 
 function EncryptionView() {
   const [password, setPassword] = useState("");
@@ -26,114 +32,52 @@ function EncryptionView() {
   }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "100vh",
-      }}
-    >
-      <div
-        style={{
-          padding: "16px",
-        }}
-      >
-        <p
+    <MainLayout>
+      <HeaderLayout>
+        <PageTitle titleText="Encryption" />
+        <PasswordInput
+          password={password}
+          setPassword={setPassword}
+          shouldShowPassword={shouldShowPassword}
+        />
+        <a
           style={{
+            marginRight: "12px",
             fontSize: "1em",
+            color: "var(--fg-accent-color)",
+          }}
+          href="#/"
+          onClick={(event) => {
+            event.preventDefault();
+            setShouldShowPassword((shouldShowPassword) => !shouldShowPassword);
           }}
         >
-          <span
-            style={{
-              marginRight: "12px",
-              fontSize: "1em",
-            }}
-          >
-            Enter your password
-          </span>
-          <a
-            style={{
-              marginRight: "12px",
-              fontSize: "1em",
-            }}
-            href="#/"
-            onClick={(event) => {
-              event.preventDefault();
-              setShouldShowPassword(
-                (shouldShowPassword) => !shouldShowPassword
-              );
-            }}
-          >
-            <em>{shouldShowPassword ? "Hide Password" : "Show Password"}</em>
-          </a>
-          <a
-            style={{
-              marginRight: "12px",
-              fontSize: "1em",
-            }}
-            href="#/"
-            onClick={(event) => {
-              event.preventDefault();
-              setShouldShowEncrpytedUrl(true);
-            }}
-          >
-            <em>Encrypt</em>
-          </a>
-        </p>
-        <div
+          <em>{shouldShowPassword ? "Hide Password" : "Show Password"}</em>
+        </a>
+        <a
           style={{
-            display: "flex",
+            marginRight: "12px",
+            fontSize: "1em",
+            color: "var(--fg-accent-color)",
+          }}
+          href="#/"
+          onClick={(event) => {
+            event.preventDefault();
+            setShouldShowEncrpytedUrl(true);
           }}
         >
-          <input
-            style={{
-              marginTop: "8px",
-              fontSize: "1em",
-              display: "block",
-              width: "100%",
-              padding: "4px 8px",
-            }}
-            autoFocus={true}
-            type={shouldShowPassword ? "text" : "password"}
-            value={password}
-            onChange={(event) => setPassword(event?.currentTarget.value)}
-          />
-        </div>
-      </div>
-      <div
-        style={{
-          padding: "0px 16px",
-        }}
-      >
-        <hr />
-      </div>
-      <div
-        style={{
-          padding: "16px",
-          maxWidth: "100%",
-          overflow: "auto",
-          flexGrow: "1",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <textarea
-          style={{
-            fontSize: "1em",
-            display: "block",
-            width: "100%",
-            padding: "4px 8px",
-            flexGrow: "1",
-            whiteSpace: "pre",
-            overflowWrap: "normal",
-            overflowX: "scroll",
-          }}
-          wrap="off"
-          value={text}
-          onChange={(event) => setText(event.currentTarget.value)}
-        ></textarea>
-      </div>
-    </div>
+          <em>Encrypt</em>
+        </a>
+      </HeaderLayout>
+      <ContentLayout>
+        <ContentTextArea
+          placeholder="Enter text"
+          text={text}
+          setText={setText}
+          isReadOnly={false}
+        />
+      </ContentLayout>
+    </MainLayout>
   );
 }
 
